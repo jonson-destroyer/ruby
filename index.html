@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>みかん検出・直径測定</title>
+  </head>
+  <body>
+    <h1>みかん検出・直径測定</h1>
+    <p>20 mmマーカーを、測りたい実とほぼ同じ奥行きに置いてください。</p>
+
+    <button id="start">カメラを開始</button>
+    <button id="stop" disabled>停止</button>
+    <p id="status">待機中</p>
+
+    <video id="result" autoplay playsinline muted
+           style="width:100%; max-width:700px"></video>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
