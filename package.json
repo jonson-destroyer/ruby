@@ -5,5 +5,12 @@
   "scripts": {
     "build": "vite build",
     "start": "node server.js"
+  },
+  "dependencies": {
+    "@roboflow/inference-sdk": "latest",
+    "express": "latest"
+  },
+  "devDependencies": {
+    "vite": "latest"
   }
 }
