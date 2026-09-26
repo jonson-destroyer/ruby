@@ -25,11 +25,13 @@ startButton.addEventListener("click", async () => {
   try {
     camera = await streams.useCamera({
       video: {
-        facingMode: { ideal: "environment" }, // スマホの背面カメラを優先
+        facingMode: { ideal: "environment" },
         width: { ideal: 1280 },
         height: { ideal: 720 }
       }
     });
+
+    status.textContent = "カメラ取得済み・映像接続中…";
 
     connection = await webrtc.useStream({
       source: camera,
@@ -53,9 +55,13 @@ startButton.addEventListener("click", async () => {
     stopButton.disabled = false;
     status.textContent = "処理中：映像に検出枠と直径を表示します";
   } catch (error) {
+    const stage = camera?.getVideoTracks?.()[0]?.readyState === "live"
+      ? "カメラ取得後の映像接続"
+      : "カメラ取得";
+
     console.error(error);
     await stopCamera();
-    status.textContent = `接続できませんでした: ${error.message}`;
+    status.textContent = `接続できませんでした（${stage}）: ${error.message}`;
   }
 });
 
