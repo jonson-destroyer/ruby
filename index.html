@@ -1,21 +1,49 @@
 <!doctype html>
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>みかん検出・直径測定</title>
-  </head>
-  <body>
-    <h1>みかん検出・直径測定</h1>
-    <p>20 mmマーカーを、測りたい実とほぼ同じ奥行きに置いてください。</p>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#2f6b3a" />
+  <title>みかんカウント・摘果測定</title>
+</head>
+<body>
+  <header>
+    <h1>みかんカウント・摘果測定</h1>
+    <p>20mmのマーカーを、測りたい実とほぼ同じ奥行きに置いて校正してください。</p>
+  </header>
 
-    <button id="start">カメラを開始</button>
-    <button id="stop" disabled>停止</button>
+  <main>
+    <div class="stage">
+      <video id="video" autoplay playsinline muted></video>
+      <canvas id="overlay"></canvas>
+    </div>
+
+    <div class="controls">
+      <button id="start">カメラを開始</button>
+      <button id="stop" disabled>停止</button>
+      <button id="calibrate">校正する</button>
+    </div>
     <p id="status">待機中</p>
+    <p id="calib-status"></p>
 
-    <video id="result" autoplay playsinline muted
-           style="width:100%; max-width:700px"></video>
+    <div class="stats">
+      <div class="stat"><div class="value" id="stat-total">0</div><div class="label">検出数</div></div>
+      <div class="stat"><div class="value" id="stat-clusters">0</div><div class="label">房数</div></div>
+      <div class="stat"><div class="value" id="stat-thin">0</div><div class="label">摘果候補</div></div>
+      <div class="stat"><div class="value" id="stat-avg">-</div><div class="label">平均直径</div></div>
+    </div>
 
-    <script type="module" src="/src/main.js"></script>
-  </body>
+    <div class="controls">
+      <button id="save">この結果を記録</button>
+      <button id="export">CSVで書き出し</button>
+    </div>
+
+    <section class="log">
+      <h2>記録一覧(端末内保存・オフライン)</h2>
+      <ul id="log"></ul>
+    </section>
+  </main>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
 </html>
