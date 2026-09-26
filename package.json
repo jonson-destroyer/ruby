@@ -12,7 +12,8 @@
     "express": "latest"
   },
   "devDependencies": {
-    "vite": "latest"
+    "vite": "latest",
+    "vite-plugin-pwa": "latest"
   }
 }
 
