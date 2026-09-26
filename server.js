@@ -27,7 +27,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.json({ limit: "1mb" }));
+app.use(express.json({ limit: "3mb" }));
 
 app.post("/api/init-webrtc", async (req, res) => {
   try {
@@ -72,7 +72,6 @@ app.post("/api/init-webrtc", async (req, res) => {
     console.log("WebRTC init: upstream status", response.status);
 
     if (!response.ok) {
-      // 応答本文には接続情報が含まれる可能性があるためログに出さない
       console.error("Roboflow WebRTC HTTP status:", response.status);
       return res.status(502).json({
         error: `Roboflow connection failed (${response.status})`
@@ -86,5 +85,61 @@ app.post("/api/init-webrtc", async (req, res) => {
   }
 });
 
+// 4G/5G確認用：ボタンを押したときの1フレームだけを処理する
+app.post("/api/infer-frame", async (req, res) => {
+  const image = req.body?.image;
+  if (
+    typeof image !== "string" ||
+    !/^[A-Za-z0-9+/]+={0,2}$/.test(image) ||
+    image.length > 2_500_000
+  ) {
+    return res.status(400).json({ error: "Invalid image" });
+  }
+
+  try {
+    const response = await fetch(
+      "https://serverless.roboflow.com/infer/workflows/" +
+        "s-workspace-ur3p4/7-v7-o4c38-2-rfdetr-small-t1-logic",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${process.env.ROBOFLOW_API_KEY}`
+        },
+        body: JSON.stringify({
+          inputs: { image: { type: "base64", value: image } }
+        }),
+        signal: AbortSignal.timeout(30000)
+      }
+    );
+
+    // エラー本文やAPI Keyはブラウザへ返さない
+    if (!response.ok) {
+      console.error("Frame inference HTTP status:", response.status);
+      return res.status(502).json({
+        error: `Image inference failed (${response.status})`
+      });
+    }
+
+    const result = await response.json();
+    const output = result?.outputs?.[0] ?? result?.[0];
+
+    if (!output || typeof output !== "object") {
+      return res.status(502).json({ error: "Unexpected workflow output" });
+    }
+
+    res.json({
+      mikan_count: output.mikan_count,
+      diameter_mm: output.diameter_mm,
+      measurement_status: output.measurement_status,
+      output_image: output.output_image
+    });
+  } catch (error) {
+    console.error("Frame inference request failed:", error?.name);
+    res.status(502).json({ error: "Could not process image" });
+  }
+});
+
 app.use(express.static(path.join(directory, "dist")));
 app.listen(process.env.PORT || 3000, "0.0.0.0");
+
