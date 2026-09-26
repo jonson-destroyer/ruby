@@ -1,5 +1,6 @@
 import { InferenceEngine, CVImage } from "inferencejs";
 
+
 const MODEL_ID = "s-workspace-ur3p4/7-o4c38-2-rfdetr-small-t1";
 
 // 公開用キー。秘密の ROBOFLOW_API_KEY ではありません。
