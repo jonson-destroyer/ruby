@@ -39,7 +39,10 @@ app.post("/api/init-webrtc", async (req, res) => {
     ) {
       return res.status(400).json({ error: "Invalid WebRTC offer" });
     }
+    // const response = await fetch( の直前
+console.log("WebRTC init: request received");
 
+　　
     // 接続先Workflowと出力はサーバー側で固定する。
     const response = await fetch(
       "https://serverless.roboflow.com/initialise_webrtc_worker",
@@ -66,6 +69,8 @@ app.post("/api/init-webrtc", async (req, res) => {
     );
 
     const answer = await response.json();
+    // const answer = await response.json(); の直後
+console.log("WebRTC init: upstream status", response.status);
     if (!response.ok) {
       console.error("Roboflow WebRTC error:", response.status, answer);
       return res.status(502).json({
