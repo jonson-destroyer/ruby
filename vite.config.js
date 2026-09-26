@@ -5,22 +5,26 @@ export default defineConfig({
   plugins: [
     VitePWA({
       registerType: "autoUpdate",
-      injectRegister: "auto",
+      // アプリの見た目・アイコンはここに置き換えてください(public/配下に画像を用意)
       manifest: {
-        name: "みかん検出・直径測定",
-        short_name: "みかん測定",
-        description: "端末内でみかんの個数と推定直径を確認",
-        start_url: "/",
-        scope: "/",
+        name: "みかんカウント・摘果測定",
+        short_name: "みかん摘果",
+        description: "オフラインで使えるみかん検出・カウント・摘果判定アプリ",
+        theme_color: "#2f6b3a",
+        background_color: "#fbf7ee",
         display: "standalone",
-        theme_color: "#22332a",
-        background_color: "#22332a"
+        start_url: "/",
+        icons: [
+          // 実際のアイコンファイルをpublic/に置いてパスを合わせてください
+          // { src: "/icon-192.png", sizes: "192x192", type: "image/png" },
+          // { src: "/icon-512.png", sizes: "512x512", type: "image/png" },
+        ],
       },
       workbox: {
-        globPatterns: ["**/*.{html,js,css,svg,png,webp,wasm}"],
-        maximumFileSizeToCacheInBytes: 25 * 1024 * 1024,
-        navigateFallback: "/"
-      }
-    })
-  ]
+        // アプリ本体(HTML/JS/CSS)はプリキャッシュしてオフラインでも起動できるようにする。
+        // Roboflowのモデル本体はinferencejsが独自にIndexedDBへキャッシュするため対象外でよい。
+        globPatterns: ["**/*.{js,css,html,ico,png,svg}"],
+      },
+    }),
+  ],
 });
