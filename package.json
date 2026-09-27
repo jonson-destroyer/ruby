@@ -7,13 +7,10 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "@roboflow/inference-sdk": "latest",
     "inferencejs": "latest",
     "express": "latest"
   },
   "devDependencies": {
-    "vite": "latest",
-    "vite-plugin-pwa": "latest"
+    "vite": "^5.4.11"
   }
 }
-
