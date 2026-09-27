@@ -268,11 +268,3 @@ function exportCsv() {
   URL.revokeObjectURL(url);
 }
 
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    // vite-plugin-pwaが自動生成するservice workerを登録
-    import("virtual:pwa-register").then(({ registerSW }) => {
-      registerSW({ immediate: true });
-    });
-  });
-}
